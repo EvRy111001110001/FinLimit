@@ -8,14 +8,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
-
+/**
+ *Клиент для запроса курса валют из внешнего API
+ */
 @Service
 @RequiredArgsConstructor
 public class ExchangeRateService {
 
     private final ExchangeRateRepository exchangeRateRepository;
-    private final ExternalExchangeRateClient externalClient; // Клиент для запроса курса валют из внешнего API
+    private final ExternalExchangeRateClient externalClient;
 
     public BigDecimal getExchangeRate(String currencyPair, Instant date) {
         return exchangeRateRepository.findByCurrencyPairAndDate(currencyPair, date)
@@ -26,7 +27,7 @@ public class ExchangeRateService {
                     BigDecimal newRate = externalClient.fetchExchangeRate(currencyPair);
                     BigDecimal prevRate = exchangeRateRepository.findLatestByCurrencyPair(currencyPair)
                             .map(ExchangeRate::getCloseRate)
-                            .orElse(BigDecimal.ZERO); // Если раньше данных не было
+                            .orElse(BigDecimal.ZERO);
 
                     ExchangeRate exchangeRate = new ExchangeRate(
                             new ExchangeRateKey(currencyPair, date), newRate, prevRate

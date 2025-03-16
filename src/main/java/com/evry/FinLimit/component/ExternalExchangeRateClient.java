@@ -1,7 +1,6 @@
 package com.evry.FinLimit.component;
 
 import com.evry.FinLimit.model.ExchangeRateResponse;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -11,7 +10,6 @@ import java.math.BigDecimal;
 
 
 @Component
-//@RequiredArgsConstructor
 public class ExternalExchangeRateClient {
 
     private final RestTemplate restTemplate;

@@ -10,7 +10,6 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 /**
 

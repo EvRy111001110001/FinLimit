@@ -1,7 +1,6 @@
 package com.evry.FinLimit.model;
 
 import com.evry.FinLimit.entity.CurrencyShortname;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -12,8 +11,6 @@ import java.time.LocalDateTime;
 /**
 
  */
-
-
 @Getter
 @Setter
 @Schema(description = "Transaction Response")
@@ -51,7 +48,7 @@ public class TransactionWithLimitDTO {
         this.transactionDate = transactionDate != null ? transactionDate.toLocalDateTime() : null; // Конвертируем Timestamp -> LocalDateTime
         this.limitDate = limitDate != null ? limitDate.toLocalDateTime() : null; // Конвертируем Timestamp -> LocalDateTime
         this.limitAmount = limitAmount;
-        this.limitCurrency = CurrencyShortname.valueOf(limitCurrency); // в ENUM
+        this.limitCurrency = CurrencyShortname.valueOf(limitCurrency); // строку в ENUM
     }
 }
 

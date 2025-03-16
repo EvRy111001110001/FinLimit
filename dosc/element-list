@@ -1,0 +1,10 @@
+com.evry.FinLimit
+com.evry.FinLimit.cassandra
+com.evry.FinLimit.component
+com.evry.FinLimit.config
+com.evry.FinLimit.controllers
+com.evry.FinLimit.entity
+com.evry.FinLimit.mappers
+com.evry.FinLimit.model
+com.evry.FinLimit.repositories
+com.evry.FinLimit.services

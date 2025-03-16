@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      retries: 10
+      timeout: 5s
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    restart: always
+    environment:
+      - CASSANDRA_CLUSTER_NAME=FinLimitCluster
+      - CASSANDRA_DC=datacenter1
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    healthcheck:
+      test: ["CMD", "cqlsh", "--connect-timeout=5", "-e", "DESCRIBE KEYSPACES"]
+      interval: 15s
+      retries: 10
+      timeout: 10s
+
+  app:
+    image: finlimit-app:latest
+    container_name: finlimit-app
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      cassandra:
+        condition: service_healthy
+    command: [ "sh", "-c", "echo 'Ждем 60 секунд...' && sleep 60 && exec java -jar /app/app.jar" ]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_CASSANDRA_CONTACT_POINTS: cassandra
+      SPRING_CASSANDRA_PORT: 9042
+      SPRING_CASSANDRA_KEYSPACE_NAME: ervy_keyspace
+      SPRING_CASSANDRA_LOCAL_DATACENTER: datacenter1
+      KEY_API: ${KEY_API}
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+  cassandra_data:

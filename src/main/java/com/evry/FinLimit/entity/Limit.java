@@ -7,11 +7,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
+ * конструктор с параметрами для теста
  */
 @Entity
 @Getter
 @Setter
-//@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "limits")
 public class Limit {
     @Id
@@ -31,6 +33,5 @@ public class Limit {
     @Enumerated(EnumType.STRING)
     @Column(name = "limit_currency_shortname")
     private CurrencyShortname limitCurrencyShortname;
-
 
 }
