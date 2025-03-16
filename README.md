@@ -27,8 +27,8 @@
 1. **Клонируйте репозиторий:**
 
     ```sh
-    git clone https://github.com/EvRy111001110001/TaskManagement
-    cd task-management-system
+    git clone https://github.com/EvRy111001110001/FinLimit
+    cd FinLimit
     ```
 
 2. **Заполните переменные в файле env:** (например так)
