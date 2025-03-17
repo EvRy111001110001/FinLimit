@@ -13,5 +13,5 @@ public interface LimitMapper {
 
     LimitResponseDTO toDTO(Limit limit);
 
-    Limit toEntity(LimitRequestDTO limitDTO);
+    //Limit toEntity(LimitRequestDTO limitDTO);
 }

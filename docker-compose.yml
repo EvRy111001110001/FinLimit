@@ -7,17 +7,12 @@ services:
     restart: always
     environment:
       POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "postgres" ]
-      interval: 10s
-      retries: 10
-      timeout: 5s
 
   cassandra:
     image: cassandra:latest
@@ -30,26 +25,18 @@ services:
       - "9042:9042"
     volumes:
       - cassandra_data:/var/lib/cassandra
-    healthcheck:
-      test: ["CMD", "cqlsh", "--connect-timeout=5", "-e", "DESCRIBE KEYSPACES"]
-      interval: 15s
-      retries: 10
-      timeout: 10s
 
   app:
     image: finlimit-app:latest
     container_name: finlimit-app
     restart: always
     depends_on:
-      postgres:
-        condition: service_healthy
-      cassandra:
-        condition: service_healthy
-    command: [ "sh", "-c", "echo 'Ждем 60 секунд...' && sleep 60 && exec java -jar /app/app.jar" ]
+      - postgres
+      - cassandra
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SPRING_CASSANDRA_CONTACT_POINTS: cassandra
       SPRING_CASSANDRA_PORT: 9042
       SPRING_CASSANDRA_KEYSPACE_NAME: ervy_keyspace
@@ -57,7 +44,13 @@ services:
       KEY_API: ${KEY_API}
     ports:
       - "8080:8080"
+    networks:
+      - finlimit_network
 
 volumes:
   postgres_data:
   cassandra_data:
+
+networks:
+  finlimit_network:
+    driver: bridge
