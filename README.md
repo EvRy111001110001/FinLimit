@@ -36,25 +36,24 @@
     KEY_API=123533456547686
     ```
 
-3. **Запустите базы данных в Docker:**
-    ```sh
-    docker run --name postgres -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres
-    docker run --name cassandra -d -p 9042:9042 cassandra:latest
-    ```
 
-4. **Соберите приложение:**
+3. **Соберите приложение:**
     ```sh
     ./gradlew clean build -x test
     ```
 
-5. **Создайте Docker-образ:**
+4. **Создайте Docker-образ:**
     ```sh
     docker build -t finlimit-app .
     ```
 
-6. **Запустите Docker-контейнер приложения:**
+5. **Соберите Docker-контейнер приложения:**
     ```sh
-    docker run -p 8080:8080 --env-file .env finlimit-app
+    docker build -t finlimit-app .
+    ```
+6. **Запустите Docker Compose:**
+    ```sh
+    docker-compose up -d --build
     ```
 
 ## Документация по API
@@ -66,5 +65,5 @@
 HTML-документация сгенерирована в папке `docs`.
 
 ## TODO
-- [ ] Добавить Docker Compose
+- [x] Добавить Docker Compose
 - [ ] Настроить CI/CD

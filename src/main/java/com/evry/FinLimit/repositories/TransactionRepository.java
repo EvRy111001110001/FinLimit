@@ -15,17 +15,19 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     @Query(value = """
-        SELECT t.*, 
-               l.limit_datetime, 
-               l.limit_sum AS limit_amount, 
-               l.limit_currency_shortname AS limit_currency 
+        SELECT t.id, t.account_from, t.account_to,
+               t.currency_shortname AS currency_name,
+               t.sum, t.expense_category, t.datetime,
+               l.limit_datetime,
+               l.limit_sum AS limit_amount,
+               l.limit_currency_shortname AS limit_currency
         FROM transactions t
         JOIN limits l ON l.account_from = t.account_from  
         AND l.limit_datetime = (
             SELECT MAX(l2.limit_datetime) 
             FROM limits l2 
             WHERE l2.account_from = t.account_from
-            AND l2.limit_datetime <= t.datetime
+            AND t.datetime <= l2.limit_datetime
         )
         WHERE t.account_from = :accountId
         ORDER BY t.datetime, t.expense_category

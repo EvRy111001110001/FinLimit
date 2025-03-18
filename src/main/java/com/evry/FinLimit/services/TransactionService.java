@@ -150,7 +150,7 @@ public class TransactionService {
      *
      * @param limitSum the available limit before debt repayment
      * @param debts a list of outstanding debts to be repaid
-     * @return the remaining limit after debt repayment (may be negative if the limit was exceeded)
+     * @return the remaining limit after debt repayment (maybe negative if the limit was exceeded)
      */
     public BigDecimal debtRepayment(BigDecimal limitSum, List<BigDecimal> debts) {
         Iterator<BigDecimal> iterator = debts.iterator();
@@ -210,11 +210,12 @@ public class TransactionService {
      * @param limits a list of limits associated with the account
      * @return the most recent applicable limit for the transaction, or {@code null} if none is found
      */
-    public Limit findRelevantLimit(TransactionWithLimitDTO transaction, List<Limit> limits) { // сортировка лимитов
-       return limits.stream()
-        .filter(limit -> !limit.getLimitDatetime().isAfter(transaction.getTransactionDate()))
-        .max(Comparator.comparing(Limit::getLimitDatetime))
-        .orElse(null);
+    public Limit findRelevantLimit(TransactionWithLimitDTO transaction, List<Limit> limits) {
+        return limits.stream()
+                .filter(limit -> limit.getLimitDatetime().isAfter(transaction.getTransactionDate())
+                        || limit.getLimitDatetime().isEqual(transaction.getTransactionDate())) // Учитываем и равные
+                .max(Comparator.comparing(Limit::getLimitDatetime)) // Берём последний возможный лимит
+                .orElse(null);
     }
 
     /**

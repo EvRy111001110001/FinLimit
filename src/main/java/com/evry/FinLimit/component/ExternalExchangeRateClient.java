@@ -16,7 +16,10 @@ public class ExternalExchangeRateClient {
 
     public ExternalExchangeRateClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        //System.out.println("🔥 ExternalExchangeRateClient загружен!");
     }
+
+
 
     @Value("${twelvedata.api.url}")
     private String apiUrl;
@@ -36,9 +39,10 @@ public class ExternalExchangeRateClient {
 
         ExchangeRateResponse response = restTemplate.getForObject(url, ExchangeRateResponse.class);
         if (response != null && response.getRate() != null) {
+            //System.out.println("✅ Курс валют получен: " + response.getRate());
             return response.getRate();
         }
-
+        //System.out.println("❌ Ошибка: Не удалось получить курс валют");
         throw new RuntimeException("Unable to get exchange rate");
     }
 }

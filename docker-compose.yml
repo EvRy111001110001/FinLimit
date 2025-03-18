@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:latest
@@ -13,6 +11,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      retries: 5
+    networks:
+      - finlimit_network
 
   cassandra:
     image: cassandra:latest
@@ -25,14 +29,23 @@ services:
       - "9042:9042"
     volumes:
       - cassandra_data:/var/lib/cassandra
+    healthcheck:
+      test: [ "CMD", "cqlsh", "-e", "SELECT release_version FROM system.local" ]
+      interval: 15s
+      retries: 5
+      timeout: 10s
+    networks:
+      - finlimit_network
 
   app:
     image: finlimit-app:latest
     container_name: finlimit-app
     restart: always
     depends_on:
-      - postgres
-      - cassandra
+      postgres:
+        condition: service_healthy
+      cassandra:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
@@ -41,7 +54,8 @@ services:
       SPRING_CASSANDRA_PORT: 9042
       SPRING_CASSANDRA_KEYSPACE_NAME: ervy_keyspace
       SPRING_CASSANDRA_LOCAL_DATACENTER: datacenter1
-      KEY_API: ${KEY_API}
+      TWELVEDATA_API_URL: ${API_URL}
+      TWELVEDATA_API_KEY: ${KEY_API}
     ports:
       - "8080:8080"
     networks:

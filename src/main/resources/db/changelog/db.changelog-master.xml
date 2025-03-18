@@ -8,7 +8,7 @@
         <include file="v.1.0.0/create-table-transactions.xml" relativeToChangelogFile="true"/>
         <include file="v.1.0.0/create-table-limits.xml" relativeToChangelogFile="true"/>
 
-        <include file="v.1.0.0/insert-initial-data.xml" relativeToChangelogFile="true"/>
-<!--        test Open API-->
+        <!--         <include file="v.1.0.0/insert-initial-data.xml" relativeToChangelogFile="true"/> test Open API-->
+
 
 </databaseChangeLog>

@@ -15,4 +15,4 @@ COPY --from=builder /app/build/libs/*SNAPSHOT.jar app.jar
 EXPOSE 8080
 
 # Добавляем задержку перед запуском
-ENTRYPOINT ["sh", "-c", "sleep 120 && java -jar /app/app.jar"]
+ENTRYPOINT ["sh", "-c", "sleep 60 && java -jar /app/app.jar"]
