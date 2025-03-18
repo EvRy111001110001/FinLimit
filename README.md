@@ -47,11 +47,7 @@
     docker build -t finlimit-app .
     ```
 
-5. **Соберите Docker-контейнер приложения:**
-    ```sh
-    docker build -t finlimit-app .
-    ```
-6. **Запустите Docker Compose:**
+5. **Запустите Docker Compose:**
     ```sh
     docker-compose up -d --build
     ```
